@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="100px"
+    android:paddingRight="100px"
+    android:paddingTop="50px">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4px"
+        android:background="#40000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="50px">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间： "
+            android:textSize="70px" />
+
+        <TextView
+            android:id="@+id/EventInfo_StartTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="70px" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="—"
+            android:textSize="70px" />
+
+        <TextView
+            android:id="@+id/EventInfo_EndTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="70px" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="说明： "
+            android:textSize="70px" />
+
+        <TextView
+            android:id="@+id/EventInfo_Msg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:textSize="70px" />
+    </LinearLayout>
+</LinearLayout>
