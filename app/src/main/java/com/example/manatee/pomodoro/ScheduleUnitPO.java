@@ -1,6 +1,7 @@
 package com.example.manatee.pomodoro;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -140,5 +141,9 @@ public class ScheduleUnitPO {
             return false;
 
         return true;
+    }
+
+    public void persistence(){
+
     }
 }

@@ -79,6 +79,7 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(mContext, "任务已存在！", Toast.LENGTH_SHORT).show();
             return false;
         }
+        cursor.close();
 
         //生成记录
         ContentValues values = new ContentValues();
@@ -165,5 +166,24 @@ public class MyDataBaseHelper extends SQLiteOpenHelper {
             Toast.makeText(mContext, "修改失败！", Toast.LENGTH_SHORT).show();
         }
         Toast.makeText(mContext, "修改成功！", Toast.LENGTH_SHORT).show();
+    }
+
+    public void insert(long id, long startTime, long endTime, String Msg, long overflow, boolean isFinish){
+        SQLiteDatabase db = this.getWritableDatabase();
+        long flag = 0;
+        if (isFinish) flag = 1;
+        String[] SqlArg = new String[6];
+        SqlArg[0] = Long.toString(id);
+        SqlArg[1] = Long.toString(startTime);
+        SqlArg[2] = Long.toString(endTime);
+        SqlArg[3] = Msg;
+        SqlArg[4] = Long.toString(overflow);
+        SqlArg[5] = Long.toString(flag);
+        try {
+            db.execSQL("insert into events (id, start, end, message, overflow, isfinish) values(?,?,?,?,?,?)", SqlArg);
+        } catch (Exception e) {
+            Log.e("dbHelper", e.getMessage());
+            Toast.makeText(mContext, "本地数据库添加失败！", Toast.LENGTH_SHORT).show();
+        }
     }
 }
