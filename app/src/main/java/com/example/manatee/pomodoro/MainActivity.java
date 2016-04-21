@@ -3,9 +3,7 @@ package com.example.manatee.pomodoro;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,16 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.app.FragmentManager;
-import android.widget.TimePicker;
-import android.widget.Toast;
-
-import com.alamkanak.weekview.WeekView;
-import com.alamkanak.weekview.WeekViewEvent;
-
-import java.util.Calendar;
 
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BaseCalendarFrag.EditEventListener {
     private MyDataBaseHelper dbHelper;
@@ -31,10 +21,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FragmentManager fManager;
     public TodayCalendarFrag fg_calendar;
     public AddEventFrag fg_addEvent;
+    public CloudFrag fg_cloud;
     private Button button_calendar;
     private Button button_addEvent;
     private Button button_deleteRecord;
-    private Button button_deleteTable;
+    private Button button_cloudSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fg_addEvent = new AddEventFrag();
         fg_calendar = new TodayCalendarFrag();
         fg_calendar.setOnEditEventListener(this);
+        fg_cloud = new CloudFrag();
 
         button_calendar = (Button) findViewById(R.id.button_calendar);
         button_calendar.setOnClickListener(this);
@@ -54,8 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button_addEvent.setOnClickListener(this);
         button_deleteRecord = (Button) findViewById(R.id.bottom_button3);
         button_deleteRecord.setOnClickListener(this);
-        button_deleteTable = (Button) findViewById(R.id.bottom_button4);
-        button_deleteTable.setOnClickListener(this);
+        button_cloudSetting = (Button) findViewById(R.id.bottom_button4);
+        button_cloudSetting.setOnClickListener(this);
         dbHelper = new MyDataBaseHelper(this, "Pomodoro.db", null, 1);
         dbHelper.getWritableDatabase();
 
@@ -65,12 +57,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void showFragment(FragmentTransaction transaction, Fragment fragment) {
         transaction.hide(fg_calendar);
         transaction.hide(fg_addEvent);
+        transaction.hide(fg_cloud);
         transaction.show(fragment);
     }
 
     @Override
     public void onClick(View v) {
         FragmentTransaction fragmentTransaction = fManager.beginTransaction();
+        BmobDataBase remoteDB = new BmobDataBase(MainActivity.this);
         switch (v.getId()) {
             case R.id.button_calendar:
                 showFragment(fragmentTransaction, fg_calendar);
@@ -102,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialog_deleteRecords.show();
                 break;
             case R.id.bottom_button4:
-                BmobDataBase remoteDB = new BmobDataBase(MainActivity.this);
-                remoteDB.upload();
+                showFragment(fragmentTransaction, fg_cloud);
+                fragmentTransaction.replace(R.id.fragment_layout, fg_cloud);
+                fragmentTransaction.addToBackStack(null);
                 break;
             default:
         }
@@ -124,9 +119,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_day_view:
+                fg_calendar.setVisibleDays(1);
+                break;
+            case R.id.action_three_day_view:
+                fg_calendar.setVisibleDays(3);
+                break;
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

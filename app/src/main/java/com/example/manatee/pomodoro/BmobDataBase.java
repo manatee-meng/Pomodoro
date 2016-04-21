@@ -31,7 +31,7 @@ public class BmobDataBase {
     private List<BmobObject> remoteDeleteList = new ArrayList<>();
     private List<ScheduleUnit> remoteList = new ArrayList<>();
     private List<ScheduleUnit> localList = new ArrayList<>();
-    private List<BmobObject> localInsertList = new ArrayList<>();
+    private List<ScheduleUnit> localInsertList = new ArrayList<>();
     private int remoteInsertNum;                                      //一次同步需要操作的数据个数
     private int remoteUpdateNum;
     private int remoteDeleteNum;
@@ -44,6 +44,9 @@ public class BmobDataBase {
     private static final int ReadRemoteError = 2;
     private static final int UpLoadRemoteFinish = 3;
     private static final int UpLoadRemoteError = 4;
+    private static final int DownLoadremoteFinish = 5;
+    private static final int DownLoadremoteError = 6;
+
 
     public BmobDataBase(Context context) {
         mContext = context;
@@ -176,15 +179,18 @@ public class BmobDataBase {
         for (Iterator<ScheduleUnit> it = remoteList.iterator(); it.hasNext(); ) {
             ScheduleUnit unitRemote = it.next();
             ScheduleUnit unitLocal = findUnitInListById(localList, unitRemote.getUnitId());
-            if (unitRemote == null) {                                         //本地没有，需要insert
-                localInsertList.add(unitLocal);
+            if (unitLocal == null) {                                          //本地没有，需要insert
+                localInsertList.add(unitRemote);
             }
         }
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        while (localInsertList.size() != 0){
 
+        EventDAO eventDAO = new EventDAO();
+        for (Iterator<ScheduleUnit> it = localInsertList.iterator(); it.hasNext(); ) {
+            eventDAO.insert(it.next());
         }
-
+        Message message = new Message();
+        message.what = DownLoadremoteFinish;
+        handler.sendMessage(message);
     }
 
     private Handler handler = new Handler() {
@@ -208,6 +214,9 @@ public class BmobDataBase {
                 case UpLoadRemoteFinish:
                     if (remoteDeleteNum <= 0 && remoteUpdateNum <= 0 && remoteInsertNum <= 0)
                         Toast.makeText(mContext, "已与云端同步", Toast.LENGTH_SHORT).show();
+                    break;
+                case DownLoadremoteFinish:
+                    Toast.makeText(mContext, "已从云端恢复", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;

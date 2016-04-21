@@ -80,6 +80,10 @@ public abstract class BaseCalendarFrag extends Fragment implements WeekView.Even
         return event;
     }
 
+    public void setVisibleDays(int days) {
+        mWeekView.setNumberOfVisibleDays(days);
+    }
+
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
