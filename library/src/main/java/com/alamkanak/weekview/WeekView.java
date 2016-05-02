@@ -1987,8 +1987,6 @@ public class WeekView extends View {
         return -mCurrentOrigin.y / mHourHeight;
     }
 
-
-
     /////////////////////////////////////////////////////////////////
     //
     //      Interfaces.

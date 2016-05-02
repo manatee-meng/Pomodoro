@@ -34,6 +34,7 @@ public abstract class BaseCalendarFrag extends Fragment implements WeekView.Even
     protected WeekView mWeekView;
     protected MyDataBaseHelper dbHelper;
     private EditEventListener mEditEventListener;
+    private AddEventListener mAddEventListener;
 
     @Nullable
     @Override
@@ -45,6 +46,8 @@ public abstract class BaseCalendarFrag extends Fragment implements WeekView.Even
         mWeekView.setEventLongPressListener(this);
         mWeekView.setEmptyViewLongPressListener(this);
         mWeekView.setNumberOfVisibleDays(3);
+        Calendar now = Calendar.getInstance();
+        mWeekView.goToHour((double) now.get(Calendar.HOUR_OF_DAY));
         // Lets change some dimensions to best fit the view.
         mWeekView.setColumnGap((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
         mWeekView.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 12, getResources().getDisplayMetrics()));
@@ -130,14 +133,20 @@ public abstract class BaseCalendarFrag extends Fragment implements WeekView.Even
 
     @Override
     public void onEmptyViewLongPress(Calendar time) {
-
+        //mAddEventListener.OnAddEvent(time);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.AddNewEvent(time);
     }
 
-    public void setOnEditEventListener(EditEventListener editEventListener){
+    public void setOnEditEventListener(EditEventListener editEventListener) {
         this.mEditEventListener = editEventListener;
     }
 
-    public interface EditEventListener{
+    public interface EditEventListener {
         void OnEditEvent(long id);
+    }
+
+    public interface AddEventListener {
+        void OnAddEvent(Calendar startTime);
     }
 }

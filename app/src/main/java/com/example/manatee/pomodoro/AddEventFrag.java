@@ -50,6 +50,10 @@ public class AddEventFrag extends Fragment implements View.OnClickListener {
         NeedUpdate = flag;
     }
 
+    public void setStartTime(Calendar time){
+        startTime = time;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,8 +73,10 @@ public class AddEventFrag extends Fragment implements View.OnClickListener {
 
         dbHelper = new MyDataBaseHelper(view.getContext(), "Pomodoro.db", null, 1);
 
-        startTime = Calendar.getInstance();
-        endTime = Calendar.getInstance();
+        if (startTime == null)
+            startTime = Calendar.getInstance();
+        endTime =  Calendar.getInstance();
+        endTime.setTime(startTime.getTime());
         endTime.add(Calendar.MINUTE, 30);
         EventMsg = "";
         if (NeedUpdate) {

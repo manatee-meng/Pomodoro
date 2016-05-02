@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.app.FragmentManager;
 
+import java.util.Calendar;
+
 import cn.bmob.v3.Bmob;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BaseCalendarFrag.EditEventListener {
@@ -73,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.button_addEvent:
                 fg_addEvent.setNeedUpdate(false);
+                fg_addEvent.setStartTime(null);                                         //代表使用当前时间
                 showFragment(fragmentTransaction, fg_addEvent);
                 fragmentTransaction.replace(R.id.fragment_layout, fg_addEvent);
                 fragmentTransaction.addToBackStack(null);
@@ -131,6 +134,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void AddNewEvent(Calendar startTime){
+        fg_addEvent.setStartTime(startTime);
+        fg_addEvent.setNeedUpdate(false);
+        FragmentTransaction fragmentTransaction = fManager.beginTransaction();
+        showFragment(fragmentTransaction, fg_addEvent);
+        fragmentTransaction.replace(R.id.fragment_layout, fg_addEvent);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override
